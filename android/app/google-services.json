@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "972073683107",
+    "project_id": "flutter-projects-4d1b6",
+    "storage_bucket": "flutter-projects-4d1b6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972073683107:android:96a1a6c44bd8beb27a5716",
+        "android_client_info": {
+          "package_name": "com.nachoargu.push_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCglDuE0cR5Lds3K48ypsu8PEqTNOSJu8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
