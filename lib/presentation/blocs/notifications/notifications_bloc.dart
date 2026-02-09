@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:push_app/config/domain/entities/push_message.dart';
+import 'package:push_app/config/local_notifications/local_notifications.dart';
 import 'package:push_app/firebase_options.dart';
 
 part 'notifications_event.dart';
@@ -21,7 +22,21 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  NotificationsBloc() : super(NotificationsState()) {
+  int pushNumberid = 0;
+
+  final Future<void> Function()? requestLocalNotificationsPermissions;
+  final void Function({
+    required int id,
+    String? title,
+    String? body,
+    String? data,
+  })?
+  showLocalNotification;
+
+  NotificationsBloc({
+    this.requestLocalNotificationsPermissions,
+    this.showLocalNotification,
+  }) : super(NotificationsState()) {
     on<NotificationsStatusChanged>(_notificationsStatusChanged);
     on<NotificationReceived>(_onPushMessageReceived);
 
@@ -89,6 +104,15 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
           : message.notification!.apple?.imageUrl,
     );
 
+    if (showLocalNotification != null) {
+      showLocalNotification!(
+        id: ++pushNumberid,
+        body: notification.body,
+        data: notification.messageId,
+        title: notification.title,
+      );
+    }
+
     add(NotificationReceived(notification));
   }
 
@@ -106,6 +130,11 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       provisional: false,
       sound: true,
     );
+
+    if (requestLocalNotificationsPermissions != null) {
+      await requestLocalNotificationsPermissions!();
+    }
+    //Solicitar acceso a las notificaciones
 
     add(NotificationsStatusChanged(settings.authorizationStatus));
   }
